@@ -58,6 +58,7 @@ ${otherText}
     });
 
     if (messageResponse.status !== 200) {
+        console.log(messageResponse)
         throw new Error('Failed to send message')
     }
   } catch (error) {
