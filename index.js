@@ -13,7 +13,7 @@ const run = async () => {
         Authorization: `token ${githubToken}`
       }
     });
-    const json = response.json()
+    const json = await response.json()
     console.log(json)
 
     // const time = (new Date()).toTimeString();
