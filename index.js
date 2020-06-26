@@ -7,6 +7,9 @@ const generateLines = (items) => items.map(({ title, user: { login } }) => `  - 
 const run = async () => {
   try {
     const repo = core.getInput('repo');
+    const iconUrl = core.getInput('icon_url');
+    const username = core.getInput('username');
+
     const githubToken = process.env.GITHUB_TOKEN
     const dateToday = new Date().toISOString().split('T')[0]
     const prEndpoint = `https://api.github.com/search/issues?q=repo:${repo}+is:pr+is:merged+sort:merged-date+merged:${dateToday}`
@@ -42,7 +45,22 @@ ${fixesText}
 Other Improvements:
 ${otherText}
 `
-    console.log(message)
+
+    const messageResponse = await fetch(prEndpoint, {
+        method: "POST",
+        headers: {
+        Authorization: `token ${githubToken}`
+        },
+        body: JSON.stringify({
+            icon_url: iconUrl,
+            message,
+            username
+        })
+    });
+
+    if (messageResponse.status !== 200) {
+        throw new Error('Failed to send message')
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
