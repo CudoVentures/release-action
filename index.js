@@ -17,13 +17,30 @@ const run = async () => {
         throw new Error('Could not authenticate with repository')
     }
     const json = await response.json()
-    console.log(json)
+    const prs = json.items
+    
+    const features = prs.filter(({ title }) => title.toLowerCase().startsWith('feat'))
+    const fixes = prs.filter(({ title }) => title.toLowerCase().startsWith('hotfix') || title.toLowerCase().startsWith('fix'))
+    const rest = prs.filter(pr => !features.includes(pr) && !fixes.includes(pr))
 
-    // const time = (new Date()).toTimeString();
-    // core.setOutput("time", time);
-    // // Get the JSON webhook payload for the event that triggered the workflow
-    // const payload = JSON.stringify(github.context.payload, undefined, 2)
-    // console.log(`The event payload: ${payload}`);
+    const featuresText = features.map(({ title, user: { login } }) => `  - ${title} (${login})`).join('\n')
+    const fixesText = fixes.map(({ title, user: { login } }) => `  - ${title} (${login})`).join('\n')
+    const otherText = rest.map(({ title, user: { login } }) => `  - ${title} (${login})`).join('\n')
+
+    const message = 
+`
+:rocket: *Cudo Console* (${dateToday})
+
+Features:
+${featuresText}
+
+Fixes:
+${fixesText}
+
+Other Improvements:
+${otherText}
+`
+    console.log(message)
   } catch (error) {
     core.setFailed(error.message);
   }
