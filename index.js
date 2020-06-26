@@ -51,21 +51,18 @@ ${otherText}
         method: "POST",
         body: JSON.stringify({
             icon_url: iconUrl,
-            message,
+            text: message,
             username
         })
     });
 
     if (messageResponse.status !== 200) {
-        const text = messageResponse.text()
-        console.log(text)
-        console.log(postMessageUrl, {
+        const text = await messageResponse.text()
+        console.log(text, postMessageUrl, {
             icon_url: iconUrl,
-            message,
+            text: message,
             username
         })
-        console.log(messageResponse)
-        console.log(messageResponse)
         throw new Error('Failed to send message')
     }
   } catch (error) {
