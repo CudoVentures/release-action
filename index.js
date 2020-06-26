@@ -35,8 +35,7 @@ const run = async () => {
     const otherText = generateLines(rest)
 
     const message = 
-`
-:rocket: *Cudo Console* (${dateToday})
+`:rocket: *Cudo Console* (${dateToday})
 
 Features:
 ${featuresText}
@@ -58,6 +57,8 @@ ${otherText}
     });
 
     if (messageResponse.status !== 200) {
+        const text = messageResponse.text()
+        console.log(text)
         console.log(postMessageUrl, {
             icon_url: iconUrl,
             message,
