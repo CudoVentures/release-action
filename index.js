@@ -58,6 +58,12 @@ ${otherText}
     });
 
     if (messageResponse.status !== 200) {
+        console.log(postMessageUrl, {
+            icon_url: iconUrl,
+            message,
+            username
+        })
+        console.log(messageResponse)
         console.log(messageResponse)
         throw new Error('Failed to send message')
     }
