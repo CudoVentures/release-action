@@ -2,6 +2,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const fetch = require('node-fetch')
 
+const generateLines = (items) => items.map(({ title, user: { login } }) => `  - ${title} (${login})`).join('\n')
+
 const run = async () => {
   try {
     const repo = core.getInput('repo');
@@ -23,9 +25,9 @@ const run = async () => {
     const fixes = prs.filter(({ title }) => title.toLowerCase().startsWith('hotfix') || title.toLowerCase().startsWith('fix'))
     const rest = prs.filter(pr => !features.includes(pr) && !fixes.includes(pr))
 
-    const featuresText = features.map(({ title, user: { login } }) => `  - ${title} (${login})`).join('\n')
-    const fixesText = fixes.map(({ title, user: { login } }) => `  - ${title} (${login})`).join('\n')
-    const otherText = rest.map(({ title, user: { login } }) => `  - ${title} (${login})`).join('\n')
+    const featuresText = generateLines(features)
+    const fixesText = generateLines(fixes)
+    const otherText = generateLines(rest)
 
     const message = 
 `
