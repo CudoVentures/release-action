@@ -13,6 +13,9 @@ const run = async () => {
         Authorization: `token ${githubToken}`
       }
     });
+    if (response.status !== 200) {
+        throw new Error('Could not authenticate with repository')
+    }
     const json = await response.json()
     console.log(json)
 
