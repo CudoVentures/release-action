@@ -9,6 +9,7 @@ const run = async () => {
     const repo = core.getInput('repo');
     const iconUrl = core.getInput('icon_url');
     const username = core.getInput('username');
+    const project = core.getInput('project');
 
     const githubToken = process.env.GITHUB_TOKEN
     const postMessageUrl = process.env.SLACK_POST_WEBHOOK
@@ -35,8 +36,8 @@ const run = async () => {
     const otherText = generateLines(rest)
 
     const message = 
-`:rocket: *Cudo Console* (${dateToday})
-
+`:rocket: *${project}* (${dateToday})
+\`\`\`
 Features:
 ${featuresText}
 
@@ -45,6 +46,7 @@ ${fixesText}
 
 Other Improvements:
 ${otherText}
+\`\`\`
 `
 
     const messageResponse = await fetch(postMessageUrl, {

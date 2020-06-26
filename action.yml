@@ -7,6 +7,9 @@ inputs:
   username: 
     description: 'username'
     required: true
+  project: 
+    description: 'project'
+    required: true
   icon_url: 
     description: 'icon_url'
     required: true
