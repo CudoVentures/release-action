@@ -4,10 +4,10 @@ inputs:
   repo:
     description: 'The repository to get the merged PRs for'
     required: true
-  repo: 
+  username: 
     description: 'username'
     required: true
-  repo: 
+  icon_url: 
     description: 'icon_url'
     required: true
 runs:
