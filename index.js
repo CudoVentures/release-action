@@ -11,6 +11,8 @@ const run = async () => {
     const username = core.getInput('username');
 
     const githubToken = process.env.GITHUB_TOKEN
+    const postMessageUrl = process.env.SLACK_POST_WEBHOOK
+
     const dateToday = new Date().toISOString().split('T')[0]
     const prEndpoint = `https://api.github.com/search/issues?q=repo:${repo}+is:pr+is:merged+sort:merged-date+merged:${dateToday}`
     const response = await fetch(prEndpoint, {
@@ -46,11 +48,8 @@ Other Improvements:
 ${otherText}
 `
 
-    const messageResponse = await fetch(prEndpoint, {
+    const messageResponse = await fetch(postMessageUrl, {
         method: "POST",
-        headers: {
-        Authorization: `token ${githubToken}`
-        },
         body: JSON.stringify({
             icon_url: iconUrl,
             message,
