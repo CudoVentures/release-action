@@ -22,21 +22,21 @@ const run = async () => {
       }
     });
     if (response.status !== 200) {
-        throw new Error('Could not authenticate with repository')
+      throw new Error('Could not authenticate with repository')
     }
     const json = await response.json()
     const prs = json.items
-    
-    const features = prs.filter(({ title }) => title.toLowerCase().startsWith('feat'))
-    const fixes = prs.filter(({ title }) => title.toLowerCase().startsWith('hotfix') || title.toLowerCase().startsWith('fix'))
-    const rest = prs.filter(pr => !features.includes(pr) && !fixes.includes(pr))
+    if (prs.length) {
+      const features = prs.filter(({ title }) => title.toLowerCase().startsWith('feat'))
+      const fixes = prs.filter(({ title }) => title.toLowerCase().startsWith('hotfix') || title.toLowerCase().startsWith('fix'))
+      const rest = prs.filter(pr => !features.includes(pr) && !fixes.includes(pr))
 
-    const featuresText = generateLines(features)
-    const fixesText = generateLines(fixes)
-    const otherText = generateLines(rest)
+      const featuresText = generateLines(features)
+      const fixesText = generateLines(fixes)
+      const otherText = generateLines(rest)
 
-    const message = 
-`:rocket: *${project}* (${dateToday})
+      const message =
+        `:rocket: *${project}* (${dateToday})
 \`\`\`
 Features:
 ${featuresText}
@@ -49,27 +49,28 @@ ${otherText}
 \`\`\`
 `
 
-    const messageResponse = await fetch(postMessageUrl, {
+      const messageResponse = await fetch(postMessageUrl, {
         method: "POST",
         body: JSON.stringify({
-            icon_url: iconUrl,
-            text: message,
-            username
+          icon_url: iconUrl,
+          text: message,
+          username
         })
-    });
+      });
 
-    if (messageResponse.status !== 200) {
+      if (messageResponse.status !== 200) {
         const text = await messageResponse.text()
         console.log(text, postMessageUrl, {
-            icon_url: iconUrl,
-            text: message,
-            username
+          icon_url: iconUrl,
+          text: message,
+          username
         })
         throw new Error('Failed to send message')
+      }
     }
   } catch (error) {
     core.setFailed(error.message);
   }
-} 
+}
 
 run()
